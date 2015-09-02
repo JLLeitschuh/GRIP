@@ -5,6 +5,9 @@ import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import edu.wpi.grip.core.events.SocketChangedEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -103,5 +106,21 @@ public class Socket<T> {
                 .add("socketHint", getSocketHint())
                 .add("value", getValue())
                 .toString();
+    }
+
+    public static final Socket[] socketListFromHints(EventBus eventBus, SocketHint ... hints){
+        List<Socket> sockets = new ArrayList<>();
+        for (SocketHint hint : hints){
+            sockets.add(new Socket(eventBus, hint));
+        }
+        return sockets.toArray(new Socket[sockets.size()]);
+    }
+
+    public static final Object [] getSocketValuesList(Socket ... sockets){
+        List<Object> socketValues = new ArrayList<>();
+        for (Socket socket : sockets){
+            socketValues.add(socket.getValue());
+        }
+        return socketValues.toArray(new Object[socketValues.size()]);
     }
 }

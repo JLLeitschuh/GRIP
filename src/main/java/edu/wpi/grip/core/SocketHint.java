@@ -13,7 +13,7 @@ public class SocketHint<T> {
     public enum View {NONE, SPINNER, SLIDER, RANGE, SELECT}
 
     private String identifier;
-    private Class<T> type;
+    public final Class<T> type;
     private View view;
     private T[] domain;
 
