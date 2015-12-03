@@ -6,10 +6,8 @@ import edu.wpi.grip.core.operations.composite.BlobsReport;
 import edu.wpi.grip.core.operations.composite.LinesReport;
 import org.bytedeco.javacpp.IntPointer;
 
-import static org.bytedeco.javacpp.opencv_core.Mat;
-
-import static org.bytedeco.javacpp.opencv_core.Point;
-import static org.bytedeco.javacpp.opencv_core.Size;
+import static edu.wpi.grip.core.operations.composite.FindContourOperation.Contours;
+import static org.bytedeco.javacpp.opencv_core.*;
 
 
 /**
@@ -28,6 +26,8 @@ public class SocketPreviewViewFactory {
             return (SocketPreviewView) new ImageSocketPreviewView(eventBus, (OutputSocket<Mat>) socket);
         } else if (socket.getSocketHint().getType() == Point.class || socket.getSocketHint().getType() == Size.class) {
             return (SocketPreviewView) new PointSizeSocketPreviewView(eventBus, (OutputSocket<IntPointer>) socket);
+        } else if (socket.getSocketHint().getType() == Contours.class) {
+            return (SocketPreviewView) new ContoursSocketPreviewView(eventBus, (OutputSocket<Contours>) socket);
         } else if (socket.getSocketHint().getType() == LinesReport.class) {
             return (SocketPreviewView) new LinesSocketPreviewView(eventBus, (OutputSocket<LinesReport>) socket);
         } else if (socket.getSocketHint().getType() == BlobsReport.class) {

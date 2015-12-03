@@ -76,6 +76,7 @@ public class MainWindowView extends VBox {
         eventBus.post(new OperationAddedEvent(new RGBThresholdOperation()));
         eventBus.post(new OperationAddedEvent(new HSVThresholdOperation()));
         eventBus.post(new OperationAddedEvent(new HSLThresholdOperation()));
+        eventBus.post(new OperationAddedEvent(new FindContourOperation()));
         eventBus.post(new OperationAddedEvent(new FindBlobsOperation()));
         eventBus.post(new OperationAddedEvent(new FindLinesOperation()));
         eventBus.post(new OperationAddedEvent(new FilterLinesOperation()));
