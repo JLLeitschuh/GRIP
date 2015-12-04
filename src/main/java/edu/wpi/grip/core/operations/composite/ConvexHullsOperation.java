@@ -58,8 +58,8 @@ public class ConvexHullsOperation implements Operation {
             convexHull(inputContours.getContours().get(i), outputContours.getContours().get(i));
         }
 
-        outputContours.rows = inputContours.getRows();
-        outputContours.cols = inputContours.getCols();
+        outputContours.setRows(inputContours.getRows());
+        outputContours.setCols(inputContours.getCols());
         outputSocket.setValue(outputContours);
     }
 }

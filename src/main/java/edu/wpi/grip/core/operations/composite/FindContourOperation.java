@@ -72,8 +72,8 @@ public class FindContourOperation implements Operation {
         findContours(tmp, contours.getContours(), externalOnly ? CV_RETR_EXTERNAL : CV_RETR_LIST,
                 CV_CHAIN_APPROX_TC89_KCOS);
 
-        contours.rows = input.rows();
-        contours.cols = input.cols();
+        contours.setRows(input.rows());
+        contours.setCols(input.cols());
         contoursSocket.setValue(contours);
     }
 }

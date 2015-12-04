@@ -101,9 +101,9 @@ public class FilterContoursOperation implements Operation {
         outputContours.resize(filteredContourCount);
 
         final OutputSocket<ContoursReport> outputSocket = (OutputSocket<ContoursReport>) outputs[0];
-        outputSocket.getValue().rows = inputSocket.getValue().getRows();
-        outputSocket.getValue().cols = inputSocket.getValue().getCols();
-        outputSocket.getValue().contours = outputContours;
+        outputSocket.getValue().setRows(inputSocket.getValue().getRows());
+        outputSocket.getValue().setCols(inputSocket.getValue().getCols());
+        outputSocket.getValue().setContours(outputContours);
         outputSocket.setValue(outputSocket.getValue());
     }
 }

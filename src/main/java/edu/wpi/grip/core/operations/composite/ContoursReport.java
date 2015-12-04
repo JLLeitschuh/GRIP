@@ -8,11 +8,33 @@ import static org.bytedeco.javacpp.opencv_core.*;
  * points.
  */
 public final class ContoursReport {
-    protected int rows = -1, cols = -1;
-    protected MatVector contours = new MatVector();
+    private int rows, cols;
+    private MatVector contours = new MatVector();
+
+    public ContoursReport() {
+        this(new MatVector(), -1, -1);
+    }
+
+    public ContoursReport(MatVector contours, int rows, int cols) {
+        this.contours = contours;
+        this.rows = rows;
+        this.cols = cols;
+    }
+
+    public void setContours(MatVector contours) {
+        this.contours = contours;
+    }
 
     public MatVector getContours() {
         return this.contours;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
+    public void setCols(int cols) {
+        this.cols = cols;
     }
 
     public int getRows() {
