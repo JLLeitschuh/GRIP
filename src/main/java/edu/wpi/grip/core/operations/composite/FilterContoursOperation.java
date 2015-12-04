@@ -70,8 +70,13 @@ public class FilterContoursOperation implements Operation {
     }
 
     @Override
+    public Optional<MatVector> createData(){
+        return Optional.of(new MatVector());
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
-    public void perform(InputSocket<?>[] inputs, OutputSocket<?>[] outputs) {
+    public void perform(InputSocket<?>[] inputs, OutputSocket<?>[] outputs, Optional<?> data) {
         final InputSocket<ContoursReport> inputSocket = (InputSocket<ContoursReport>) inputs[0];
         final double minArea = ((Number) inputs[1].getValue()).doubleValue();
         final double minPerimeter = ((Number) inputs[2].getValue()).doubleValue();
@@ -81,7 +86,8 @@ public class FilterContoursOperation implements Operation {
         final double maxHeight = ((Number) inputs[6].getValue()).doubleValue();
 
         final MatVector inputContours = inputSocket.getValue().getContours();
-        final MatVector outputContours = new MatVector(inputContours.size());
+        final MatVector outputContours = (MatVector) data.get();
+        outputContours.resize(inputContours.size());
 
         // Add contours from the input vector to the output vector only if they pass all of the criteria (minimum
         // area, minimum perimeter, width, and height)
@@ -101,9 +107,6 @@ public class FilterContoursOperation implements Operation {
         outputContours.resize(filteredContourCount);
 
         final OutputSocket<ContoursReport> outputSocket = (OutputSocket<ContoursReport>) outputs[0];
-        outputSocket.getValue().setRows(inputSocket.getValue().getRows());
-        outputSocket.getValue().setCols(inputSocket.getValue().getCols());
-        outputSocket.getValue().setContours(outputContours);
-        outputSocket.setValue(outputSocket.getValue());
+        outputSocket.setValue(new ContoursReport(outputContours, inputSocket.getValue().getRows(), inputSocket.getValue().getCols()));
     }
 }

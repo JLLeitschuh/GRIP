@@ -51,17 +51,17 @@ public class FindContourOperation implements Operation {
 
     @Override
     public Optional<?> createData() {
-        return Optional.of(new Mat());
+        return Optional.of(new Object[]{new Mat(), new MatVector()});
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void perform(InputSocket<?>[] inputs, OutputSocket<?>[] outputs, Optional<?> data) {
         final Mat input = ((InputSocket<Mat>) inputs[0]).getValue();
-        final Mat tmp = ((Optional<Mat>) data).get();
+        final Mat tmp = (Mat) ((Optional<Object[]>) data).get()[0];
+        final MatVector outputContourVector = (MatVector) ((Optional<Object[]>) data).get()[1];
         final boolean externalOnly = ((InputSocket<Boolean>) inputs[1]).getValue();
         final OutputSocket<ContoursReport> contoursSocket = (OutputSocket<ContoursReport>) outputs[0];
-        final ContoursReport contours = contoursSocket.getValue();
 
         if (input.empty()) {
             return;
@@ -69,11 +69,9 @@ public class FindContourOperation implements Operation {
 
         // findContours modifies its input, so we pass it  a temporary copy of the input image
         input.copyTo(tmp);
-        findContours(tmp, contours.getContours(), externalOnly ? CV_RETR_EXTERNAL : CV_RETR_LIST,
+        findContours(tmp, outputContourVector, externalOnly ? CV_RETR_EXTERNAL : CV_RETR_LIST,
                 CV_CHAIN_APPROX_TC89_KCOS);
 
-        contours.setRows(input.rows());
-        contours.setCols(input.cols());
-        contoursSocket.setValue(contours);
+        contoursSocket.setValue(new ContoursReport(outputContourVector, input.rows(), input.cols()));
     }
 }

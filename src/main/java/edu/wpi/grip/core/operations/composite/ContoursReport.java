@@ -21,20 +21,8 @@ public final class ContoursReport {
         this.cols = cols;
     }
 
-    public void setContours(MatVector contours) {
-        this.contours = contours;
-    }
-
     public MatVector getContours() {
         return this.contours;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
-    public void setCols(int cols) {
-        this.cols = cols;
     }
 
     public int getRows() {
