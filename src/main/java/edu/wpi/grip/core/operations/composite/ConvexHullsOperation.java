@@ -9,7 +9,6 @@ import edu.wpi.grip.core.SocketHint;
 import java.io.InputStream;
 import java.util.Optional;
 
-import static edu.wpi.grip.core.operations.composite.FindContourOperation.Contours;
 import static org.bytedeco.javacpp.opencv_imgproc.convexHull;
 
 /**
@@ -18,7 +17,7 @@ import static org.bytedeco.javacpp.opencv_imgproc.convexHull;
  * This can help remove holes in detected shapes, making them easier to analyze.
  */
 public class ConvexHullsOperation implements Operation {
-    private final SocketHint<Contours> contoursHint = new SocketHint<Contours>("Contours", Contours.class, Contours::new);
+    private final SocketHint<ContoursReport> contoursHint = new SocketHint<ContoursReport>("Contours", ContoursReport.class, ContoursReport::new);
 
     @Override
     public String getName() {
@@ -48,19 +47,19 @@ public class ConvexHullsOperation implements Operation {
     @Override
     @SuppressWarnings("unchecked")
     public void perform(InputSocket<?>[] inputs, OutputSocket<?>[] outputs) {
-        final InputSocket<Contours> inputSocket = (InputSocket<Contours>) inputs[0];
-        final OutputSocket<Contours> outputSocket = (OutputSocket<Contours>) outputs[0];
+        final InputSocket<ContoursReport> inputSocket = (InputSocket<ContoursReport>) inputs[0];
+        final OutputSocket<ContoursReport> outputSocket = (OutputSocket<ContoursReport>) outputs[0];
 
-        final Contours inputContours = inputSocket.getValue();
-        final Contours outputContours = outputSocket.getValue();
+        final ContoursReport inputContours = inputSocket.getValue();
+        final ContoursReport outputContours = outputSocket.getValue();
         outputContours.getContours().resize(inputContours.getContours().size());
 
         for (int i = 0; i < inputContours.getContours().size(); i++) {
             convexHull(inputContours.getContours().get(i), outputContours.getContours().get(i));
         }
 
-        outputContours.rows = inputContours.rows();
-        outputContours.cols = inputContours.cols();
+        outputContours.rows = inputContours.getRows();
+        outputContours.cols = inputContours.getCols();
         outputSocket.setValue(outputContours);
     }
 }

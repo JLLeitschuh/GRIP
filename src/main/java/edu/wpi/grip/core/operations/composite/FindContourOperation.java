@@ -17,26 +17,9 @@ import static org.bytedeco.javacpp.opencv_imgproc.*;
  */
 public class FindContourOperation implements Operation {
 
-    public final static class Contours {
-        protected int rows = -1, cols = -1;
-        protected MatVector contours = new MatVector();
-
-        public MatVector getContours() {
-            return this.contours;
-        }
-
-        public int rows() {
-            return this.rows;
-        }
-
-        public int cols() {
-            return this.cols;
-        }
-    }
-
     private final SocketHint<Mat> inputHint = new SocketHint<Mat>("Input", Mat.class, Mat::new);
     private final SocketHint<Boolean> externalHint = new SocketHint<>("External Only", Boolean.class, false, SocketHint.View.CHECKBOX);
-    private final SocketHint<Contours> contoursHint = new SocketHint<Contours>("Contours", Contours.class, Contours::new);
+    private final SocketHint<ContoursReport> contoursHint = new SocketHint<ContoursReport>("Contours", ContoursReport.class, ContoursReport::new);
 
     @Override
     public String getName() {
@@ -77,8 +60,8 @@ public class FindContourOperation implements Operation {
         final Mat input = ((InputSocket<Mat>) inputs[0]).getValue();
         final Mat tmp = ((Optional<Mat>) data).get();
         final boolean externalOnly = ((InputSocket<Boolean>) inputs[1]).getValue();
-        final OutputSocket<Contours> contoursSocket = (OutputSocket<Contours>) outputs[0];
-        final Contours contours = contoursSocket.getValue();
+        final OutputSocket<ContoursReport> contoursSocket = (OutputSocket<ContoursReport>) outputs[0];
+        final ContoursReport contours = contoursSocket.getValue();
 
         if (input.empty()) {
             return;

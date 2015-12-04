@@ -9,7 +9,6 @@ import edu.wpi.grip.core.SocketHint;
 import java.io.InputStream;
 import java.util.Optional;
 
-import static edu.wpi.grip.core.operations.composite.FindContourOperation.Contours;
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 
@@ -24,7 +23,7 @@ import static org.bytedeco.javacpp.opencv_imgproc.*;
  */
 public class FilterContoursOperation implements Operation {
 
-    private final SocketHint<Contours> contoursHint = new SocketHint<Contours>("Contours", Contours.class, Contours::new);
+    private final SocketHint<ContoursReport> contoursHint = new SocketHint<ContoursReport>("Contours", ContoursReport.class, ContoursReport::new);
     private final SocketHint<Number> minAreaHint = new SocketHint<>("Min Area", Number.class, 0, SocketHint.View.SPINNER);
     private final SocketHint<Number> minPerimeterHint = new SocketHint<>("Min Perimeter", Number.class, 0,
             SocketHint.View.SPINNER);
@@ -73,7 +72,7 @@ public class FilterContoursOperation implements Operation {
     @Override
     @SuppressWarnings("unchecked")
     public void perform(InputSocket<?>[] inputs, OutputSocket<?>[] outputs) {
-        final InputSocket<Contours> inputSocket = (InputSocket<Contours>) inputs[0];
+        final InputSocket<ContoursReport> inputSocket = (InputSocket<ContoursReport>) inputs[0];
         final double minArea = ((Number) inputs[1].getValue()).doubleValue();
         final double minPerimeter = ((Number) inputs[2].getValue()).doubleValue();
         final double minWidth = ((Number) inputs[3].getValue()).doubleValue();
@@ -101,9 +100,9 @@ public class FilterContoursOperation implements Operation {
 
         outputContours.resize(filteredContourCount);
 
-        final OutputSocket<Contours> outputSocket = (OutputSocket<Contours>) outputs[0];
-        outputSocket.getValue().rows = inputSocket.getValue().rows();
-        outputSocket.getValue().cols = inputSocket.getValue().cols();
+        final OutputSocket<ContoursReport> outputSocket = (OutputSocket<ContoursReport>) outputs[0];
+        outputSocket.getValue().rows = inputSocket.getValue().getRows();
+        outputSocket.getValue().cols = inputSocket.getValue().getCols();
         outputSocket.getValue().contours = outputContours;
         outputSocket.setValue(outputSocket.getValue());
     }

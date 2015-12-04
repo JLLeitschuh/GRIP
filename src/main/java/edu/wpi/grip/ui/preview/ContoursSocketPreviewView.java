@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import edu.wpi.grip.core.OutputSocket;
 import edu.wpi.grip.core.events.SocketChangedEvent;
+import edu.wpi.grip.core.operations.composite.ContoursReport;
 import edu.wpi.grip.ui.util.ImageConverter;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -13,13 +14,12 @@ import javafx.scene.layout.VBox;
 
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.drawContours;
-import static edu.wpi.grip.core.operations.composite.FindContourOperation.Contours;
 
 /**
  * A preview view for displaying contours.  This view shows each contour as a different-colored outline (so they can be
  * individually distinguished), as well as a count of the total number of contours found.
  */
-public final class ContoursSocketPreviewView extends SocketPreviewView<Contours> {
+public final class ContoursSocketPreviewView extends SocketPreviewView<ContoursReport> {
 
     private final ImageConverter imageConverter = new ImageConverter();
     private final ImageView imageView = new ImageView();
@@ -39,7 +39,7 @@ public final class ContoursSocketPreviewView extends SocketPreviewView<Contours>
      * @param eventBus The EventBus used by the application
      * @param socket   An output socket to preview
      */
-    public ContoursSocketPreviewView(EventBus eventBus, OutputSocket<Contours> socket) {
+    public ContoursSocketPreviewView(EventBus eventBus, OutputSocket<ContoursReport> socket) {
         super(eventBus, socket);
 
         this.setContent(new VBox(this.imageView, this.infoLabel));
@@ -55,13 +55,13 @@ public final class ContoursSocketPreviewView extends SocketPreviewView<Contours>
 
     private void render() {
         synchronized (this) {
-            final Contours contours = this.getSocket().getValue();
+            final ContoursReport contours = this.getSocket().getValue();
             long numContours = 0;
 
             if (!contours.getContours().isNull()) {
                 // Allocate a completely black OpenCV Mat to draw the contours onto.  We can easily render contours
                 // by using OpenCV's drawContours function and converting the Mat into a JavaFX Image.
-                this.tmp.create(contours.rows(), contours.cols(), CV_8UC3);
+                this.tmp.create(contours.getRows(), contours.getCols(), CV_8UC3);
                 bitwise_xor(tmp, tmp, tmp);
 
                 numContours = contours.getContours().size();
