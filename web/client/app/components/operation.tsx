@@ -10,6 +10,7 @@ interface IOperationProps extends React.Props<{}> {
 }
 
 export class Operation extends React.Component<IOperationProps, {}> {
+
   public render(): React.ReactElement<{}> {
     return (
       <ListItem
@@ -18,7 +19,9 @@ export class Operation extends React.Component<IOperationProps, {}> {
         }
         secondaryText={
           this.props.operationDescription.summary
-        }/>
+        }
+        onClick={this.props.createOperation}
+      />
     );
   }
 }

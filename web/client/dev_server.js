@@ -20,8 +20,14 @@ app.use(require('webpack-hot-middleware')(compiler));
 
 app.use('/api', proxy('http://localhost:8080', {
   forwardPath: function(req) {
-    return '/server' + require('url').parse(req.url).path;
-  }
+    const path = require('url').parse(req.url).path;
+    // Removes empty query params from the request.
+    // Fixes a bug with RestEasy not handling null params.
+    const pathParsed = path.replace(/(?:&)?[a-zA-z]+=(?=&|$)/g, "");
+    console.log(pathParsed);
+    return '/server' + pathParsed;
+  },
+  preserveReqSession: true,
 }));
 
 app.get('*', (req, res) => {

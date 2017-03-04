@@ -107,8 +107,8 @@ paths:
           name: index
           in: query
           required: false
-          type: number
-          format: integer
+          type: integer
+          format: int32
       responses:
         200:
           description: Successful response

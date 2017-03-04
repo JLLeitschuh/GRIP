@@ -87,7 +87,10 @@ export const {{classname}}FetchParamCreactor = {
             "{{baseName}}": params.{{paramName}},{{/queryParams}}
         });
 {{/hasQueryParams}}
-        let fetchOptions: RequestInit = { method: "{{httpMethod}}" };
+        let fetchOptions: RequestInit = {
+            method: "{{httpMethod}}",
+            credentials: 'include'
+        };
 
         let contentTypeHeader: Dictionary<string>;
 {{#hasFormParams}}

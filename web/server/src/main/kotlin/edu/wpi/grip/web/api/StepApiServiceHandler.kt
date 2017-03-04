@@ -4,7 +4,6 @@ import edu.wpi.grip.core.Palette
 import edu.wpi.grip.core.Pipeline
 import edu.wpi.grip.core.Step
 import edu.wpi.grip.web.swagger.api.StepsApiService
-import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.ws.rs.core.Response
@@ -36,14 +35,18 @@ class StepApiServiceHandler @Inject constructor(
     }
 
 
-    override fun stepsGet(index: BigDecimal, securityContext: SecurityContext): Response {
-        try {
-            val step = pipeline.get().steps.get(index = index.intValueExact())
-            return Response.ok(step.toSwagger()).build()
-        } catch (e: IndexOutOfBoundsException) {
-            return Response
-                    .status(Response.Status.REQUESTED_RANGE_NOT_SATISFIABLE)
-                    .entity("Index out of bound " + e.message).build()
+    override fun stepsGet(index: Int?, securityContext: SecurityContext): Response {
+        if (index == null) {
+            return Response.ok(pipeline.get().steps.map(Step::toSwagger).toList()).build()
+        } else {
+            try {
+                val step = pipeline.get().steps.get(index = index)
+                return Response.ok(listOf(step.toSwagger())).build()
+            } catch (e: IndexOutOfBoundsException) {
+                return Response
+                        .status(Response.Status.REQUESTED_RANGE_NOT_SATISFIABLE)
+                        .entity("Index out of bound " + e.message).build()
+            }
         }
     }
 

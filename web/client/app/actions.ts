@@ -1,16 +1,23 @@
 /// <reference path="../typings/index.d.ts" />
 
 import {OperationDescription, DefaultApi} from 'grip-swagger';
+import {Step} from 'grip-swagger';
 export enum ACTION {
   IncrementCounter = 1,
   DecrementCounter = 2,
   AddCounter = 3
 }
 
-export enum FETCH_OPERATIONS {
-  Request = 4,
-  Failure = 5,
-  Success = 6
+export class FetchOperations {
+  public static Request = 'Request Fetch Operations';
+  public static Failure = 'Failure Fetch Operations';
+  public static Success = 'Success Fetch Operations';
+}
+
+export class FetchSteps {
+  public static Request = 'Request Fetch Steps';
+  public static Failure = 'Failure Fetch Steps';
+  public static Success = 'Success Fetch Steps';
 }
 
 export enum OPERATION_ACTION {
@@ -29,22 +36,49 @@ export interface IOperationAction {
   name: string;
 }
 
-export function createOperationStep(name: string): IOperationAction {
-  return {type: OPERATION_ACTION.Add, name};
-}
 
 export interface IFetchOperationAction {
-  type: FETCH_OPERATIONS;
+  type: string;
   error?: string;
   response?: OperationDescription[];
 }
 
+export interface IFetchStepsAction {
+  type: string;
+  error?: string;
+  response?: Step[];
+}
+
+function requestSteps(): IFetchStepsAction {
+  return {type: FetchSteps.Request};
+}
+
+function receiveSteps(steps: Step[]): IFetchStepsAction {
+  return {response: steps, type: FetchSteps.Success};
+}
+
+export function createOperationStep(name: string): (dispatch: (event: any) => void) => Promise<any> {
+  return function (dispatch: (event: any) => void): Promise<any> {
+    dispatch(requestSteps());
+    return api
+      .stepsPut({operationName: name})
+      .then((step: Step) => {
+        return api.stepsGet({});
+      })
+      .then((steps: Step[]) => {
+        console.log(steps);
+        dispatch(receiveSteps(steps));
+      })
+      .catch(console.error);
+  };
+}
+
 function requestOperations(): IFetchOperationAction {
-  return {type: FETCH_OPERATIONS.Request};
+  return {type: FetchOperations.Request};
 }
 
 function receiveOperations(operations: OperationDescription[]): IFetchOperationAction {
-  return {response: operations, type: FETCH_OPERATIONS.Success};
+  return {response: operations, type: FetchOperations.Success};
 }
 
 export function fetchOperations(): (dispatch: (event: any) => void) => Promise<any> {
