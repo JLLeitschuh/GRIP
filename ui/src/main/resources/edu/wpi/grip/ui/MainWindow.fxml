@@ -149,6 +149,22 @@
                         </ImageView>
                     </graphic>
                 </MenuItem>
+                <MenuItem fx:id="calibrateMenuItem" text="Calibrate Camera"
+                          onAction="#showCalibration">
+                    <graphic>
+                        <ImageView styleClass="menu-graphic">
+                            <fitWidth>
+                                <DPIUtility fx:constant="SMALL_ICON_SIZE" />
+                            </fitWidth>
+                            <fitHeight>
+                                <DPIUtility fx:constant="SMALL_ICON_SIZE" />
+                            </fitHeight>
+                            <image>
+                                <Image url="@icons/settings.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
                 <MenuItem text="Generate Code" onAction="#generate">
                     <accelerator>
                         <KeyCodeCombination alt="UP" code="G" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
@@ -213,6 +229,7 @@
         <fx:include source="Deploy.fxml" fx:id="deployPane" />
         <fx:include source="AboutDialog.fxml" fx:id="aboutPane" />
         <fx:include source="analysis/Analysis.fxml" fx:id="analysisPane" />
+        <fx:include source="calibration/Calibration.fxml" fx:id="calibrationPane" />
         <fx:include source="codegeneration/CodegenDialog.fxml" fx:id="codegenPane"/>
     </fx:define>
     <stylesheets>

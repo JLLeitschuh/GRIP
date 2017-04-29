@@ -65,7 +65,7 @@ public class Main extends Application {
   @Inject private CVOperations cvOperations;
   @Inject private GripServer server;
   @Inject private HttpPipelineSwitcher pipelineSwitcher;
-  private Parent root;
+  private volatile Parent root;
   private boolean headless;
   private final UICommandLineHelper commandLineHelper = new UICommandLineHelper();
   private CommandLine parsedArgs;

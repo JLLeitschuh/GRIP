@@ -77,6 +77,8 @@ public class MainWindowController {
   @FXML
   private Pane analysisPane;
   @FXML
+  private Pane calibrationPane;
+  @FXML
   private Pane codegenPane;
   @FXML
   private MenuItem analyzeMenuItem;
@@ -103,6 +105,7 @@ public class MainWindowController {
 
   private Stage aboutDialogStage;
   private Stage analysisStage;
+  private Stage calibrationStage;
 
   @FXML
   protected void initialize() {
@@ -413,5 +416,17 @@ public class MainWindowController {
       analysisStage.setOnCloseRequest(event -> eventBus.post(BenchmarkEvent.finished()));
     }
     analysisStage.showAndWait();
+  }
+
+  @FXML
+  private void showCalibration() {
+    if (calibrationStage == null) {
+      calibrationStage = new Stage();
+      calibrationStage.setScene(new Scene(calibrationPane));
+      calibrationStage.initOwner(root.getScene().getWindow());
+      calibrationStage.setTitle("Camera Calibration");
+      calibrationStage.getIcons().add(new Image("/edu/wpi/grip/ui/icons/grip.png"));
+    }
+    calibrationStage.showAndWait();
   }
 }

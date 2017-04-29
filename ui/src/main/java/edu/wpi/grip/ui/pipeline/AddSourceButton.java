@@ -10,6 +10,7 @@ import edu.wpi.grip.core.sources.ImageFileSource;
 import edu.wpi.grip.core.sources.MultiImageFileSource;
 import edu.wpi.grip.core.sources.NetworkTableEntrySource;
 import edu.wpi.grip.ui.util.DPIUtility;
+import edu.wpi.grip.ui.util.ImageFileChooser;
 import edu.wpi.grip.ui.util.SupplierWithIO;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -82,21 +83,7 @@ public class AddSourceButton extends MenuButton {
     addMenuItem("Image(s)",
         getClass().getResource("/edu/wpi/grip/ui/icons/add-image.png"), mouseEvent -> {
           // Show a file picker so the user can open one or more images from disk
-          final FileChooser fileChooser = new FileChooser();
-          fileChooser.setTitle("Open an image");
-          fileChooser.getExtensionFilters().addAll(
-              new ExtensionFilter("Image Files",
-                  "*.bmp", "*.dib",           // Windows bitmaps
-                  "*.jpeg", "*.jpg", "*.jpe", // JPEG files
-                  "*.jp2",                    // JPEG 2000 files
-                  "*.png",                    // Portable Network Graphics
-                  "*.webp",                   // WebP
-                  "*.pbm", "*.pgm", "*.ppm",  // Portable image format
-                  "*.sr", "*.ras",            // Sun rasters
-                  "*.tiff", "*.tif"           // TIFF files
-              ),
-              new ExtensionFilter("All Files", "*.*"));
-
+          final FileChooser fileChooser = ImageFileChooser.create();
           final List<File> imageFiles = fileChooser.showOpenMultipleDialog(this.getScene()
               .getWindow());
 
