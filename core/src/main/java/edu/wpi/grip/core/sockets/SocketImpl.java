@@ -31,6 +31,7 @@ public class SocketImpl<T> implements Socket<T> {
   private Optional<Step> step = Optional.empty();
   private Optional<Source> source = Optional.empty();
   private Optional<? extends T> value = Optional.empty();
+  private OriginMetaData originMetaData = OriginMetaData.empty();
 
 
   /**
@@ -122,6 +123,16 @@ public class SocketImpl<T> implements Socket<T> {
     if (this.connections.isEmpty()) {
       this.eventBus.post(new SocketConnectedChangedEvent(this));
     }
+  }
+
+  @Override
+  public OriginMetaData getOriginMetaData() {
+    return originMetaData;
+  }
+
+  @Override
+  public void setOriginMetaData(OriginMetaData originMetaData) {
+    this.originMetaData = checkNotNull(originMetaData, "originMetaData cannot be null");
   }
 
   @Override

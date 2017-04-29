@@ -110,6 +110,16 @@ public interface Socket<T> {
   void removeConnection(Connection connection);
 
   /**
+   * @return The meta data for the original inputs to the algorithm.
+   */
+  OriginMetaData getOriginMetaData();
+
+  /**
+   * The meta data for the original inputs to the algorithm.
+   */
+  void setOriginMetaData(OriginMetaData originMetaData);
+
+  /**
    * Creates a simple text representation of this socket in the format
    * {@code {owner type}/{owner name}/{identifier}}, e.g. {@code Step/Blur/Input} or
    * {@code Source/Webcam 0/Image}.

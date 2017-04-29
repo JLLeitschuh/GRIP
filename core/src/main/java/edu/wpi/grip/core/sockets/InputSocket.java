@@ -89,6 +89,16 @@ public interface InputSocket<T> extends Socket<T> {
     }
 
     @Override
+    public OriginMetaData getOriginMetaData() {
+      return decorated.getOriginMetaData();
+    }
+
+    @Override
+    public void setOriginMetaData(OriginMetaData originMetaData) {
+      decorated.setOriginMetaData(originMetaData);
+    }
+
+    @Override
     public Set<Connection> getConnections() {
       return decorated.getConnections();
     }

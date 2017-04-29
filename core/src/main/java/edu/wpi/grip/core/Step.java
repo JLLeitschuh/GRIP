@@ -2,6 +2,7 @@ package edu.wpi.grip.core;
 
 import edu.wpi.grip.core.metrics.Timer;
 import edu.wpi.grip.core.sockets.InputSocket;
+import edu.wpi.grip.core.sockets.OriginMetaData;
 import edu.wpi.grip.core.sockets.OutputSocket;
 import edu.wpi.grip.core.sockets.Socket;
 import edu.wpi.grip.core.util.ExceptionWitness;
@@ -12,10 +13,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -136,6 +139,11 @@ public class Step {
       synchronized (removedLock) {
         if (!removed) {
           timer.time(this.operation::perform);
+          final Collection<OriginMetaData> metaDatas = inputSockets
+              .stream().map(InputSocket::getOriginMetaData).collect(Collectors.toSet());
+          OriginMetaData
+              .calculateSurvivor(metaDatas)
+              .ifPresent(data -> outputSockets.forEach(socket -> socket.setOriginMetaData(data)));
         }
       }
     } catch (RuntimeException e) {

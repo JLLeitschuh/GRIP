@@ -4,6 +4,7 @@ package edu.wpi.grip.core.sources;
 import edu.wpi.grip.core.Source;
 import edu.wpi.grip.core.events.SourceHasPendingUpdateEvent;
 import edu.wpi.grip.core.events.SourceRemovedEvent;
+import edu.wpi.grip.core.sockets.OriginMetaData;
 import edu.wpi.grip.core.sockets.OutputSocket;
 import edu.wpi.grip.core.sockets.SocketHint;
 import edu.wpi.grip.core.sockets.SocketHints;
@@ -87,6 +88,7 @@ public class CameraSource extends Source implements RestartableService {
   private final Supplier<FrameGrabber> grabberSupplier;
   private final AtomicBoolean isNewFrame = new AtomicBoolean(false);
   private final Mat currentFrameTransferMat = new Mat();
+  private long currentFrameCreationTime;
   private final AutoRestartingService cameraService;
   private volatile double frameRate = 0.0;
 
@@ -177,6 +179,7 @@ public class CameraSource extends Source implements RestartableService {
                   @Override
                   public void copyNewMat(Mat matToCopy) {
                     synchronized (CameraSource.this.currentFrameTransferMat) {
+                      currentFrameCreationTime = System.currentTimeMillis();
                       matToCopy.copyTo(CameraSource.this.currentFrameTransferMat);
                     }
                     isNewFrame.set(true);
@@ -239,6 +242,7 @@ public class CameraSource extends Source implements RestartableService {
       // The camera frame thread should not try to modify the transfer mat while it is being
       // written to the pipeline
       synchronized (currentFrameTransferMat) {
+        frameOutputSocket.setOriginMetaData(OriginMetaData.of(currentFrameCreationTime));
         currentFrameTransferMat.copyTo(frameOutputSocket.getValue().get());
       }
       frameOutputSocket.setValueOptional(frameOutputSocket.getValue());

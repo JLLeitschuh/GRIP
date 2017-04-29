@@ -58,6 +58,7 @@ public class Connection<T> {
     if (event.getConnection().equals(this)) {
       inputSocket.addConnection(this);
       outputSocket.addConnection(this);
+      inputSocket.setOriginMetaData(outputSocket.getOriginMetaData());
       inputSocket.setValueOptional(outputSocket.getValue());
     }
   }
@@ -65,6 +66,7 @@ public class Connection<T> {
   @Subscribe
   public void onOutputChanged(SocketChangedEvent e) {
     if (e.isRegarding(outputSocket)) {
+      inputSocket.setOriginMetaData(outputSocket.getOriginMetaData());
       inputSocket.setValueOptional(outputSocket.getValue());
     }
   }
